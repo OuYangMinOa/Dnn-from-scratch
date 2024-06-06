@@ -12,8 +12,8 @@ class Dnn:
         self.is_bias = bias
         self.name = "Dnn"
         if (bias):
-            self.bias = np.random.randn(output_shape) + 1
-            # self.bias = np.zeros(output_shape)+0.01
+            # self.bias = np.random.randn(output_shape)
+            self.bias = np.zeros(output_shape)+0.01
 
         else:
             self.bias = np.zeros(output_shape)
@@ -79,8 +79,8 @@ class Dnn:
         # print(np.mean(total_par_w))。
         
         # optimizer.iter += 1
-        self.weight = self.weight - total_par_w / batch_size
+        self.weight = self.weight - total_par_w 
         if (self.is_bias):
-            self.bias   = self.bias   - total_par_b / batch_size
+            self.bias   = self.bias   - total_par_b 
         
         return  np.array(batch_weight_total).reshape(batch_size,self.input_shape, last_w.shape[-1])
