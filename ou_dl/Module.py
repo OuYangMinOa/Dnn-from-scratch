@@ -32,10 +32,11 @@ class seq:
             output += layer.__repr__() + "\n"
         return output
 
-    def back(self,x,lr):
+    def back(self,err,optimizer):
+        last_w = np.tile(np.identity(err.shape[1]),(err.shape[0],1,1) )
         for layer in reversed(self.layers):
-            x = layer.back(x,lr)
-        return x
+            last_w = layer.back(err,last_w,optimizer)
+        return err
     
     def train(self,x,y,optimizer,epochs=1,batch_size=32,shuffle=False):
         if shuffle:
@@ -53,7 +54,7 @@ class seq:
 
                 self.back(d_err,optimizer)
 
-        return error
+        return self.error_func(self.forward(x), y)
             
     def shuffle_data(self,x, y):
         idx = np.arange(x.shape[0])
