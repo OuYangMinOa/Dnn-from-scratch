@@ -7,9 +7,8 @@ import numpy as np
 
 
 class seq:
-    def __init__(self,*layers,error_func = mse()):
+    def __init__(self,*layers):
         self.layers = layers
-        self.error_func = error_func
         self._set_layers_name()
 
     def _set_layers_name(self):
@@ -38,7 +37,9 @@ class seq:
             last_w = layer.back(err,last_w,optimizer)
         return err
     
-    def train(self,x,y,optimizer,epochs=1,batch_size=32,shuffle=False):
+    def train(self,x,y,optimizer,epochs=1,batch_size=32,shuffle=False,error_func=mse()):
+        self.error_func = error_func
+
         if shuffle:
             x, y = self.shuffle_data(x, y)
 
