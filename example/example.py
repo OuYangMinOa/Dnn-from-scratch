@@ -41,7 +41,7 @@ model = Module.Seq(
     Dnn(32, 16,activate_function=Mish()),
     Dnn(16, 1,activate_function=Linear()),
 )   
-print(model)
+print(model.parameters())
 ###### dataset
 n = 1024
 train_x = np.linspace(0.1,6,n)

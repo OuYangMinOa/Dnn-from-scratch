@@ -6,7 +6,7 @@ from ou_dl.Layers import Layers
 import numpy as np
 class Module:
     def __init__(self) -> None:
-        self.layers = {}
+        self.layers_dict = {}
         
     def __call__(self, x) -> Any:
         return self.forward(x)
@@ -15,29 +15,38 @@ class Module:
         raise NotImplementedError
 
     def _set_layers_name(self):
-        self.layer_count = 0 
+        self.__layer_count = 0 
         for each in self.__dict__:
             this_obj = self.__dict__[each]
-            print(isinstance(this_obj, Layers))
             if isinstance(this_obj, Layers):
-                self.layer_count += 1
-                this_obj.name = this_obj.__repr__() + "_" + str(self.layer_count)
-                self.layers[this_obj.name] = this_obj
+                self.__layer_count += 1
+                this_obj.name = this_obj.name + "_" + str(self.__layer_count)
+                self.layers_dict[this_obj.name] = this_obj
 
     def parameters(self):
         self._set_layers_name()
-        return {name:layer.parameters() for name,layer in self.layers.items()} 
+        return {name:layer.parameters() for name,layer in self.layers_dict  .items()} 
 
 class Seq(Module, Layers):
     def __init__(self,*layers):
+        super().__init__()
         self.layers = layers
         self._set_layers_name()
+        print(self.layers_dict)
 
     def forward(self, x):
         for i,layer in enumerate(self.layers):
             # print(i,layer.weight)
             x = layer.forward(x)
         return x
+    
+    def _set_layers_name(self):
+        self.__layer_count = 0
+        for each in self.layers:
+            if isinstance(each, Layers):
+                self.__layer_count += 1
+                each.name = each.name + "_" + str(self.__layer_count)
+                self.layers_dict[each.name] = each
 
     def __repr__(self) -> str:
         output = "\n"

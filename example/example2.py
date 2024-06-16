@@ -22,3 +22,4 @@ class test(Module.Module):
         return x
 tt = test()
 
+print(tt.parameters())

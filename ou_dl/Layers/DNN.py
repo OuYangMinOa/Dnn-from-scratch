@@ -15,7 +15,6 @@ class Dnn(Layers):
         if (bias):
             self.bias = np.random.randn(output_shape)
             # self.bias = np.zeros(output_shape)
-
         else:
             self.bias = np.zeros(output_shape)
 
@@ -58,10 +57,10 @@ class Dnn(Layers):
         for i in range(batch_size):
             this_act    = self.activate_function.back(self._last_output[i,:])
             w_dot_loss  = last_w[i] @ d_err[i]
-            par_b       =  np.array([ this_act[i] * np.sum( w_dot_loss[i] ) for i in range(self.output_shape)])
+            par_b       = np.array([ this_act[i] * np.sum( w_dot_loss[i] ) for i in range(self.output_shape)])
             par_w       = np.atleast_2d(self._last_input[i,:]).T @ np.atleast_2d(par_b)
-            alpha_b     = optimizer.step_b(par_b,self.name )
-            alpha_w     = optimizer.step_w(  par_w,self.name )
+            alpha_b     = optimizer.step_b(par_b,self.name)
+            alpha_w     = optimizer.step_w(par_w,self.name)
             total_par_w += alpha_w
             total_par_b += alpha_b
             batch_weight_total.append( (self.weight - alpha_w) @ last_w[i])
