@@ -4,6 +4,10 @@
 ![til](https://github.com/OuYangMinOa/Dnn-from-scratch/blob/main/example.gif)
 
 # Example.py
+  - Run the examepl
+    ```bash
+    python .\example\example.py
+    ```
   - Build a simple Dnn
     ```python
     from ou_dl import Module

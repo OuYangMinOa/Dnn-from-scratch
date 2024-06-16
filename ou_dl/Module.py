@@ -2,18 +2,36 @@
 from typing import Any
 from ou_dl.Loss import mse
 from tqdm.auto import tqdm
-
+from ou_dl.Layers import Layers
 import numpy as np
+class Module:
+    def __init__(self) -> None:
+        self.layers = {}
+        
+    def __call__(self, x) -> Any:
+        return self.forward(x)
 
+    def forward(self, x) -> Any:
+        raise NotImplementedError
 
-class Seq:
+    def _set_layers_name(self):
+        self.layer_count = 0 
+        for each in self.__dict__:
+            this_obj = self.__dict__[each]
+            print(isinstance(this_obj, Layers))
+            if isinstance(this_obj, Layers):
+                self.layer_count += 1
+                this_obj.name = this_obj.__repr__() + "_" + str(self.layer_count)
+                self.layers[this_obj.name] = this_obj
+    def parameters(self):
+        self._set_layers_name()
+        return {name:layer.parameters() for name,layer in self.layers.items()} 
+
+class Seq(Module, Layers):
     def __init__(self,*layers):
         self.layers = layers
         self._set_layers_name()
 
-    def _set_layers_name(self):
-        for i,layer in enumerate(self.layers):
-            layer.name = f"{i}_{layer.name}"
 
     def forward(self, x):
         for i,layer in enumerate(self.layers):
@@ -22,8 +40,6 @@ class Seq:
 
         return x
 
-    def __call__(self, x) -> Any:
-        return self.forward(x)
 
     def __repr__(self) -> str:
         output = "\n"

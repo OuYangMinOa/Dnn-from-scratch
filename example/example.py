@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../ou_dl')
 from ou_dl import Module
 from ou_dl.Layers import Dnn
 from ou_dl.Func import ReLU,Sigmoid,Tanh,Linear, Mish

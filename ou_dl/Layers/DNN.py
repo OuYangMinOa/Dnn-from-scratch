@@ -2,8 +2,9 @@ import numpy as np
 
 from typing import Any
 from ou_dl.Func import Linear
+from .Layer import Layers
 
-class Dnn:
+class Dnn(Layers):
     def __init__(self,input_shape=None, output_shape=None, activate_function=Linear(), bias = True) -> None:
         self.input_shape = input_shape
         self.output_shape = output_shape
@@ -36,6 +37,9 @@ class Dnn:
         self._last_output = np.array(ZL)
         return output
     
+    def parameters(self):
+        return {'weight':self.weight, 'bias':self.bias}
+
     def __call__(self, x):
         return self.forward(x)
     
