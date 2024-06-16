@@ -21,16 +21,16 @@ class Adam:
         self.mt_b_dict[layer_name] = np.zeros(b_size)
         self.vt_b_dict[layer_name] = np.zeros(b_size)
 
+    def step(self):
+        self.iter += 1
 
-
-    def step(self,gt,layer_name):
+    def step_w(self,gt,layer_name):
         self.mt_dict[layer_name] = self.beta1*self.mt_dict[layer_name] + (1-self.beta1)*gt
         self.vt_dict[layer_name] = self.beta2*self.vt_dict[layer_name] + (1-self.beta2)*gt**2
 
         mt_hat = self.mt_dict[layer_name]/(1-self.beta1**(self.iter+1))
         vt_hat = self.vt_dict[layer_name]/(1-self.beta2**(self.iter+1))
 
-        self.iter += 1
         # print(f"{self.iter=}, {self.mt=} {self.vt=} {mt_hat=} {vt_hat=}")
         return mt_hat*self.eta/(vt_hat**(1/2)+self.epsilon)
     
@@ -61,7 +61,10 @@ class Adagrad:
         self.gt_dict[layer_name] = np.zeros(w_size)
         self.gt_b_dict[layer_name] = np.zeros(b_size)
 
-    def step(self, gt, layer_name):
+    def step(self):
+        self.iter += 1
+
+    def step_w(self, gt, layer_name):
         self.gt_dict[layer_name] += gt**2
         self.iter += 1
         return self.lr*gt/(np.sqrt(self.gt_dict[layer_name])+self.epsilon)
