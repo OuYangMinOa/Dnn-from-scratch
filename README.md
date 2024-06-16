@@ -4,7 +4,7 @@
 ![til](https://github.com/OuYangMinOa/Dnn-from-scratch/blob/main/example.gif)
 
 # Example.py
-  - Run the examepl
+  - Run the example
     ```bash
     python .\example\example.py
     ```
