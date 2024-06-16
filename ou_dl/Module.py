@@ -6,14 +6,14 @@ from tqdm.auto import tqdm
 import numpy as np
 
 
-class seq:
+class Seq:
     def __init__(self,*layers):
         self.layers = layers
         self._set_layers_name()
 
     def _set_layers_name(self):
         for i,layer in enumerate(self.layers):
-            layer.name = f"{i}_layers"
+            layer.name = f"{i}_{layer.name}"
 
     def forward(self, x):
         for i,layer in enumerate(self.layers):

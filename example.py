@@ -1,6 +1,6 @@
 from ou_dl import Module
 from ou_dl.Layers import Dnn
-from ou_dl.Func import ReLU,Sigmoid,Tanh,Linear
+from ou_dl.Func import ReLU,Sigmoid,Tanh,Linear, Mish
 from ou_dl.Opt import Adam, Adagrad
 from ou_dl.Loss import mse
 
@@ -23,27 +23,27 @@ os.makedirs("fig",exist_ok=True
 torch.set_default_dtype(torch.float64)
 
 torch_model = torch.nn.Sequential(
-            torch.nn.Linear(1, 32),
-            torch.nn.Tanh(),
-            torch.nn.Linear(32, 32),
-            torch.nn.Tanh(),
-            torch.nn.Linear(32, 32),
-            torch.nn.Tanh(),
-            torch.nn.Linear(32, 1),
+            torch.nn.Linear(1, 16),
+            torch.nn.ReLU(),
+            torch.nn.Linear(16, 32),
+            torch.nn.ReLU(),
+            torch.nn.Linear(32, 16),
+            torch.nn.ReLU(),
+            torch.nn.Linear(16, 1),
         )
 torch_model.zero_grad() 
 
-model = Module.seq(
-    Dnn(1, 32,activate_function=Tanh()),
-    Dnn(32, 32,activate_function=Tanh()),
-    Dnn(32, 32,activate_function=Tanh()),
-    Dnn(32, 1,activate_function=Linear()),
+model = Module.Seq(
+    Dnn(1, 16,activate_function =Mish()),
+    Dnn(16, 32,activate_function=Mish()),
+    Dnn(32, 16,activate_function=Mish()),
+    Dnn(16, 1,activate_function=Linear()),
 )   
+print(model)
 ###### dataset
-n = 256
-train_x = np.linspace(0,5,n)
-train_y = np.sin(train_x) + 0.5*np.random.rand(n)
-
+n = 1024
+train_x = np.linspace(0.1,6,n)
+train_y = np.sin(train_x*3)/train_x * np.exp(train_x*0.25)+ 0.6*np.random.rand(n)
 
 ###### torch dataset
 train_x_tensor = torch.tensor(train_x.reshape(-1,1), dtype=torch.float64)
@@ -52,18 +52,17 @@ tensor_dataset = TensorDataset(train_x_tensor, train_y_tensor)
 train_dataloader = DataLoader(tensor_dataset, batch_size=64, shuffle=True)
 
 ##### Optimizers
-torch_optimizer = torch.optim.Adagrad(torch_model.parameters(), lr=0.005)
-optimizer = Adagrad(lr=.005)
+torch_optimizer = torch.optim.Adagrad(torch_model.parameters(), lr=0.008)
+optimizer = Adagrad(lr=.008)
 
 
 fig,ax  = plt.subplots(1)
 plt.ion()
 for i in range(100000):
-    error = model.train(train_x, train_y, epochs=1,optimizer=optimizer,batch_size=64,shuffle=True)
-
+    error = model.train(train_x, train_y, epochs=1,optimizer=optimizer,batch_size=64,shuffle=False)
 
     # train torch model
-    for each_batch in train_dataloader:
+    for each_batch in DataLoader(tensor_dataset, batch_size=64, shuffle=False):
         torch_x, torch_y = each_batch
         criterion = torch.nn.MSELoss()
         output = torch_model(torch_x )

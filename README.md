@@ -10,7 +10,7 @@
     from ou_dl.Layers import Dnn
     from ou_dl.Func import ReLU,Sigmoid,Tanh,Linear
 
-    model = Module.seq(
+    model = Module.Seq(
         Dnn(1, 32,activate_function=Tanh()),
         Dnn(32, 32,activate_function=Tanh()),
         Dnn(32, 32,activate_function=Tanh()),

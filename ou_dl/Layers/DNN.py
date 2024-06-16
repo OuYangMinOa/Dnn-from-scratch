@@ -12,8 +12,8 @@ class Dnn:
         self.is_bias = bias
         self.name = "Dnn"
         if (bias):
-            # self.bias = np.random.randn(output_shape)
-            self.bias = np.zeros(output_shape)+0.01
+            self.bias = np.random.randn(output_shape)
+            # self.bias = np.zeros(output_shape)
 
         else:
             self.bias = np.zeros(output_shape)
@@ -65,7 +65,7 @@ class Dnn:
 
             alpha_b = optimizer.step_b(par_b,self.name )
             alpha_w = optimizer.step(  par_w,self.name )
-            # optimizer.iter -= 1
+            optimizer.iter -= 1
             total_par_w += alpha_w
             total_par_b += alpha_b
 
@@ -78,7 +78,7 @@ class Dnn:
                 
         # print(np.mean(total_par_w))。
         
-        # optimizer.iter += 1
+        optimizer.iter += 1
         self.weight = self.weight - total_par_w 
         if (self.is_bias):
             self.bias   = self.bias   - total_par_b 
