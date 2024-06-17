@@ -4,14 +4,22 @@ import numpy as np
 class tensor:
     def __init__(self,data):
         self.data = np.array(data)
+
     def __repr__(self):
         return f"tensor({self.data})"
+
     def __add__(self, other):
-        return tensor(self.data + other.data)
+        if (isinstance(other, tensor)): return tensor(self.data + other.data)
+        return tensor(self.data + other)
+
     def __sub__(self, other):
-        return tensor(self.data - other.data)
+        if (isinstance(other, tensor)):return tensor(self.data - other.data)
+        return tensor(self.data - other)
+
     def __mul__(self, other):
-        return tensor(self.data * other.data)
+        if (isinstance(other, tensor)): return tensor(self.data * other.data)
+        return tensor(self.data * other)
+
     def __getitem__(self, index):
         return tensor(self.data[index])
     def __setitem__(self, index, value):
@@ -36,7 +44,7 @@ class tensor:
         return tensor(self.data / other.data)
     def __matmul__(self, other):
         return tensor(self.data @ other.data)
-        
+
     def backward(self, grad, last_w):
         return tensor(grad @ last_w.T)
     def T(self):
