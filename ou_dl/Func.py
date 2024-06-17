@@ -17,7 +17,6 @@ class Linear:
         return np.array(x)
     def back(self,x):
         return np.array([1,]*len(x))
-    
     def __call__(self, x):
         return self.forward(x)
     def __repr__(self) -> str:
@@ -51,13 +50,10 @@ class Mish:
         return np.array(x * np.tanh(np.log(1 + np.exp(x))))
     def back(self,x):
         return np.nan_to_num(np.exp(x) * self.omega(x) / self.sigma(x)**2)
-    
     def omega(self,x):
         return 4*(x+1) + 4*np.exp(2*x) + np.exp(3*x) + np.exp(x)*(4*x+6)
-    
     def sigma(self,x):
         return 2*np.exp(x) + np.exp(2*x) + 2
-    
     def __call__(self, x):
         return self.forward(x)
     def __repr__(self) -> str:
